@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Vita IA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+</head>
+<body>
+
+{% if not datos_usuario %}
+<!-- INICIO DE SESIÓN -->
+<div class="container" id="inicio">
+  <h1>Vita IA</h1>
+  <h2>Tu asistente inteligente</h2>
+  <form action="/" method="post">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required minlength="3" maxlength="100">
+
+    <label for="peso">Peso (kg):</label>
+    <input type="number" id="peso" name="peso" required>
+
+    <label for="altura">Altura (cm):</label>
+    <input type="number" id="altura" name="altura" required>
+
+    <label for="edad">Edad:</label>
+    <input type="number" id="edad" name="edad" required>
+
+    <label for="sexo">Sexo:</label>
+    <select id="sexo" name="sexo" required>
+      <option value="masculino">Masculino</option>
+      <option value="femenino">Femenino</option>
+      <option value="otro">Otro</option>
+    </select>
+
+    <label for="informacion_adicional">Información a tener a cuenta:</label>
+    <input type="text" id="informacion_adicional" name="informacion_adicional" required>
+
+    <button type="submit">Calcular IMC</button>
+  </form>
+</div>
+
+{% elif not datos_usuario.dietas or not datos_usuario.ejercicios %}
+<!-- PANTALLA DE ELECCIÓN -->
+<div class="container" id="opciones">
+  <h2>Bienvenido a tu panel de salud</h2>
+  <div id="mensajeBienvenida">{{ mensaje_bienvenida |safe }}</div>
+  <div class="recomendacion" id="dietaRecomendada">{{ dieta_recomendada|safe }}</div>
+
+  <form action="/" method="post">
+    <h3>Otras dietas disponibles</h3>
+    <label for="dietas">Selecciona una dieta alternativa:</label>
+    <select id="dietas" name="dietas" required>
+      <option value="equilibrada">Dieta equilibrada</option>
+      <option value="keto">Dieta keto</option>
+      <option value="vegetariana">Dieta vegetariana</option>
+      <option value="hipocalorica">Dieta hipocalórica</option>
+      <option value="bajaCarbohidratos">Dieta baja en carbohidratos</option>
+    </select>
+
+
+    <label for="ejercicios" style="margin-top: 2rem;">Selecciona un plan de ejercicio:</label>
+    <select id="ejercicios" name="ejercicios" required>
+     <option value="principiante">Principiante</option>
+     <option value="intermedio">Intermedio</option>
+     <option value="avanzado">Avanzado</option>
+     <option value="cardio">Cardio intensivo</option>
+    </select>  
+
+    <button type="submit">Ir a la IA</button>
+  </form>
+</div>
+
+{% else %}
+<!-- PANTALLA DE IA -->
+<div class="container" id="ia">
+  <form action="/" method="post">
+    <label for="mensaje">Tu Pregunta:</label>
+    <textarea id="mensaje" name="mensaje" rows="4" required></textarea>
+    <button type="submit">Enviar</button>
+  </form>
+
+  {% if respuesta %}
+    <div class="ia-response">
+      <h3>Respuesta de Vita.IA:</h3>
+      <p>{{ respuesta|safe }}</p>
+    </div>
+  {% endif %}
+
+  {% if history %}
+    <div class="ia-response">
+      <h3>Historial:</h3>
+      <ul>
+        {% for item in history %}
+          <li><strong>Pregunta:</strong> {{ item.pregunta }}<br>
+              <strong>Respuesta:</strong> {{ item.respuesta }}</li><br>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<script ></script>
+ 
+</script>
+
+</body>
+</html>
